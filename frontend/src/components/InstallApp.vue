@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from "vue";
 import { Download, X } from "@lucide/vue";
+import { wiki } from "../wiki";
 
 interface InstallPrompt extends Event {
   prompt(): Promise<void>;
@@ -83,6 +84,14 @@ onUnmounted(() => {
         Visit once while connected so the “check Tailscale” page can be saved.
         Your browser must allow offline storage.
       </p>
+      <a
+        class="wiki-link"
+        :href="wiki.mobile"
+        aria-label="Connection and installation help (opens in new tab)"
+        target="_blank"
+        rel="noopener noreferrer"
+        >Connection and installation help</a
+      >
     </div>
   </div>
 </template>

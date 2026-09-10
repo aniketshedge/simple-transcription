@@ -26,6 +26,7 @@ import {
 } from "@lucide/vue";
 import type { Config, Job, TranscriptFile } from "./types";
 import InstallApp from "./components/InstallApp.vue";
+import { wiki } from "./wiki";
 
 const jobs = ref<Job[]>([]);
 const total = ref(0);
@@ -417,9 +418,19 @@ onUnmounted(() => {
         <span class="brand-icon"><AudioLines :size="23" /></span>
         <span>Simple<span class="brand-light"> Transcription</span></span>
       </button>
-      <span class="local-badge"
-        ><span class="status-dot" /> Your server. Your files.</span
-      >
+      <div class="header-tools">
+        <a
+          class="wiki-link"
+          :href="wiki.userGuide"
+          aria-label="Help (opens in new tab)"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Help</a
+        >
+        <span class="local-badge"
+          ><span class="status-dot" /> Your server. Your files.</span
+        >
+      </div>
     </div>
   </header>
 
@@ -453,6 +464,14 @@ onUnmounted(() => {
       <small
         >We can’t tell whether Tailscale is off or the server is down. Jobs
         already queued can keep running on the NUC.</small
+      >
+      <a
+        class="wiki-link"
+        :href="wiki.mobile"
+        aria-label="Connection and installation help (opens in new tab)"
+        target="_blank"
+        rel="noopener noreferrer"
+        >Connection and installation help</a
       >
       <p v-if="view !== 'history'">
         Your current page is still below. Reconnect to continue.
@@ -688,9 +707,17 @@ onUnmounted(() => {
                   </button>
                 </li>
               </ul>
-              <span class="field-label model-label" id="model-label"
-                >Transcription model</span
-              >
+              <div class="field-heading model-heading">
+                <span class="field-label" id="model-label">Transcription model</span>
+                <a
+                  class="wiki-link"
+                  :href="wiki.models"
+                  aria-label="About models and speakers (opens in new tab)"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >About models and speakers</a
+                >
+              </div>
               <div
                 class="model-options"
                 role="radiogroup"
@@ -721,7 +748,7 @@ onUnmounted(() => {
                   ><small>{{
                     config?.speaker_labels_available
                       ? "Add automatic speaker labels. Takes extra time."
-                      : "Available after a one-time server setup. See the README."
+                      : "Available after a one-time setup by your host."
                   }}</small></span
                 ><input
                   v-model="diarize"
@@ -858,6 +885,24 @@ onUnmounted(() => {
           </button>
         </div>
       </div>
+      <nav class="detail-help" aria-label="Transcript help">
+        <a
+          class="wiki-link"
+          :href="wiki.processing"
+          aria-label="How processing works (opens in new tab)"
+          target="_blank"
+          rel="noopener noreferrer"
+          >How processing works</a
+        >
+        <a
+          class="wiki-link"
+          :href="wiki.output"
+          aria-label="About this output (opens in new tab)"
+          target="_blank"
+          rel="noopener noreferrer"
+          >About this output</a
+        >
+      </nav>
       <div v-if="active(selected)" class="queue-note">
         <Clock3 :size="19" /><span>{{
           selected.status === "uploading"

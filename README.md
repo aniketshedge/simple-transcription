@@ -9,6 +9,10 @@ A small, mobile-first Vue application for turning audio and video into English t
 - Upload progress, live processing stages, and an approximate **current-stage** ETA.
 - Recordings automatically removed after completion, failure, or cancellation. Transcripts remain until you delete the job.
 
+## Documentation
+
+User and self-hosting guides are prepared in [`docs/wiki/Home.md`](docs/wiki/Home.md). Their [GitHub Wiki](https://github.com/aniketshedge/simple-transcription/wiki) publication is pending. Maintainers: publish the Markdown sources to the separate wiki repository and verify the page links before releasing the frontend help links. Pushing this application repository does not publish the Wiki.
+
 ## Deploy on the NUC
 
 Requires a Linux x86-64 machine and current Docker Engine with Docker Compose v2. This configuration targets an Intel N100 with 16 GB RAM. Install Docker and clone this repository onto the NUC, then run:

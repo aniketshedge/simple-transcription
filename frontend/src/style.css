@@ -24,6 +24,27 @@
   right: 8px;
   top: 8px;
 }
+.wiki-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  min-width: 44px;
+  justify-content: center;
+  padding: 6px 5px;
+  color: #4f7658;
+  font-size: 12px;
+  line-height: 1.4;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.wiki-link:focus-visible {
+  border-radius: 5px;
+}
+.header-tools {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
 .connection-page {
   max-width: 560px;
   margin: 25px auto 45px;
@@ -723,8 +744,13 @@ footer span {
 .icon-button:hover {
   background: #edf2e8;
 }
-.model-label {
-  margin-top: 26px;
+.model-heading {
+  flex-wrap: wrap;
+  gap: 0 12px;
+  margin-bottom: 8px;
+}
+.model-heading .field-label {
+  margin-bottom: 0;
 }
 .model-options {
   display: grid;
@@ -968,6 +994,13 @@ footer span {
   align-items: center;
   gap: 8px;
 }
+.detail-help {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: -8px 0 12px;
+}
 .danger {
   color: var(--red);
 }
@@ -1202,6 +1235,9 @@ dialog::backdrop {
   }
   .header-inner {
     padding: 0 20px;
+  }
+  .header-tools {
+    gap: 7px;
   }
   .brand {
     font-size: 16px;
