@@ -11,7 +11,13 @@ A small, mobile-first Vue application for turning audio and video into English t
 
 ## Documentation
 
-User and self-hosting guides are prepared in [`docs/wiki/Home.md`](docs/wiki/Home.md). Their [GitHub Wiki](https://github.com/aniketshedge/simple-transcription/wiki) publication is pending. Maintainers: publish the Markdown sources to the separate wiki repository and verify the page links before releasing the frontend help links. Pushing this application repository does not publish the Wiki.
+Visit the [GitHub Wiki](https://github.com/aniketshedge/simple-transcription/wiki) for user and self-hosting documentation:
+
+- [User guide](https://github.com/aniketshedge/simple-transcription/wiki/User-Guide): create jobs, upload recordings, and download transcripts.
+- [Self-hosting guide](https://github.com/aniketshedge/simple-transcription/wiki/Self-Hosting): deploy and configure your server.
+- [Processing and output](https://github.com/aniketshedge/simple-transcription/wiki/Processing-and-Output): understand stages, progress, and transcript formats.
+
+Maintainers: editable wiki sources live in [`docs/wiki/`](docs/wiki/). Publish documentation changes to the separate wiki repository as well; pushing this application repository does not update the live Wiki.
 
 ## Deploy on the NUC
 
