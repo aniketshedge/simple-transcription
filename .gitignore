@@ -1,0 +1,26 @@
+.env
+# Local notes and agent instructions are not part of the public repository.
+/private/
+/AGENTS.md
+.env.*
+!.env.example
+data/
+models/
+recordings/
+transcripts/
+*.sqlite*
+*.db
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+node_modules/
+frontend/dist/
+coverage/
+.DS_Store
+*.log
+.idea/
+.vscode/
+playwright-report/
+test-results/

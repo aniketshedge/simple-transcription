@@ -1,0 +1,40 @@
+services:
+  transcription:
+    image: simple-transcription:local
+    build: .
+    # Rebuild on `docker compose up`, so a git pull is enough to update the app.
+    pull_policy: build
+    platform: linux/amd64
+    init: true
+    restart: unless-stopped
+    ports:
+      - "${BIND_ADDRESS:-0.0.0.0}:${PORT:-8000}:8000"
+    environment:
+      HF_TOKEN: ${HF_TOKEN:-}
+      CPU_THREADS: ${CPU_THREADS:-3}
+      OMP_NUM_THREADS: ${CPU_THREADS:-3}
+      MKL_NUM_THREADS: ${CPU_THREADS:-3}
+      MAX_FILE_MB: ${MAX_FILE_MB:-4096}
+      MAX_FILES_PER_JOB: ${MAX_FILES_PER_JOB:-20}
+      MAX_DURATION_SECONDS: ${MAX_DURATION_SECONDS:-10800}
+      UPLOAD_TTL_HOURS: ${UPLOAD_TTL_HOURS:-24}
+    volumes:
+      - app-data:/data
+      - model-cache:/models
+    cpus: 3.0
+    mem_limit: 10g
+    stop_grace_period: 30s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  app-data:
+  model-cache:
+
