@@ -81,7 +81,7 @@ def test_cancel_queued_removes_recording_and_delete_is_guarded(client, new_job):
     assert client.get(f"/api/jobs/{job['id']}").status_code == 404
 
 
-def test_downloads_preserve_word_info_and_duplicate_names(client, new_job):
+def test_downloads_use_segment_text_preserve_json_and_duplicate_names(client, new_job):
     job = new_job(submit=False)
     client.put(f"/api/jobs/{job['id']}/files", params={"filename": "recording.mp4"}, content=b"audio")
     job = client.post(f"/api/jobs/{job['id']}/submit").json()
@@ -92,7 +92,7 @@ def test_downloads_preserve_word_info_and_duplicate_names(client, new_job):
                 "end": 1.0,
                 "text": "Hello",
                 "speaker": "SPEAKER_00",
-                "words": [{"start": 0.1, "end": 1, "word": "Hello", "score": 0.95, "speaker": "SPEAKER_00"}],
+                "words": [{"start": 0.2, "end": 0.9, "word": "Hello", "score": 0.95, "speaker": "SPEAKER_00"}],
             }
         ]
     }
@@ -100,10 +100,16 @@ def test_downloads_preserve_word_info_and_duplicate_names(client, new_job):
         save_result(file["id"], result, file["name"], "small", [])
         db.update_file(file["id"], has_transcript=1, status="completed")
     text = client.get(f"/api/files/{file['id']}/download").text
-    assert "00:00:00.100" in text and "score=0.950" in text and "SPEAKER_00" in text
+    assert "[00:00:00.100 --> 00:00:01.000] SPEAKER_00: Hello" in text
+    assert "score=" not in text
+    assert "00:00:00.200" not in text and "00:00:00.900" not in text
+    assert text.count("Hello") == 1
     assert client.get(f"/api/files/{file['id']}/download?format=json").json()["result"] == result
     archive = zipfile.ZipFile(io.BytesIO(client.get(f"/api/jobs/{job['id']}/download").content))
     assert len(archive.namelist()) == len(set(archive.namelist())) == 4
+    for name in archive.namelist():
+        if name.endswith(".txt"):
+            assert archive.read(name).decode("utf-8") == text
     assert client.get(f"/api/files/{file['id']}/preview").json()["text"] == text
     assert client.delete(f"/api/jobs/{job['id']}").status_code == 204
     assert not list((db.settings.data / "transcripts").iterdir())

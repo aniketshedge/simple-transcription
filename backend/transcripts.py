@@ -36,14 +36,6 @@ def render_text(result, name, model, warnings):
         lines.append(
             f"[{timestamp(segment.get('start'))} --> {timestamp(segment.get('end'))}]{label} {segment.get('text', '').strip()}"
         )
-        # Keep word timings, confidence and speaker changes in the same LLM-ready text file.
-        for word in segment.get("words", []):
-            details = [f"{timestamp(word.get('start'))} --> {timestamp(word.get('end'))}"]
-            if word.get("speaker"):
-                details.append(str(word["speaker"]))
-            if word.get("score") is not None:
-                details.append(f"score={word['score']:.3f}")
-            lines.append(f"  [{'; '.join(details)}] {word.get('word', '')}")
         lines.append("")
     if not result.get("segments"):
         lines.append("[No speech detected]")

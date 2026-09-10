@@ -24,6 +24,12 @@ Validated locally with Docker 29.7.2 on an Apple Silicon Mac, running the NUC's 
 
 The test instance keeps only the completed synthetic transcripts as examples. Temporary source media and the failed/cancelled test jobs were removed.
 
+## Segment-only TXT follow-up
+
+- Updated TXT generation to retain segment text, start/end timestamps, and speaker labels while omitting word timings and confidence scores. Existing saved TXT files retain their previous format.
+- All 21 backend tests and Python lint checks pass. Download coverage verifies concise TXT output in individual downloads, previews, and ZIP archives, and confirms that JSON retains the full model results.
+- Documented Hugging Face read-only token permissions and gated-model access setup. Live token/model access remains unverified without credentials.
+
 ## PWA follow-up
 
 - Added manifest, standalone display configuration, normal/maskable PNG icons, an Apple touch icon, and home-screen installation guidance.

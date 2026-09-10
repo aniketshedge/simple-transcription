@@ -4,7 +4,7 @@ A small, mobile-first Vue application for turning audio and video into English t
 
 - Named jobs with multiple recordings, persistent history, a sequential queue, and cancellation.
 - WhisperX **small** or **medium**, selected per job, using CPU INT8 inference.
-- Segment timestamps, word timings and confidence scores where available, and optional speaker labels.
+- Segment text with start/end timestamps and optional speaker labels in TXT output.
 - A UTF-8 `.txt` per recording, a structured `.json` companion, and ZIP downloads for a job.
 - Upload progress, live processing stages, and an approximate **current-stage** ETA.
 - Recordings automatically removed after completion, failure, or cancellation. Transcripts remain until you delete the job.
@@ -71,9 +71,11 @@ See [MDN's installability requirements](https://developer.mozilla.org/en-US/docs
 Speaker labeling is an additional local WhisperX/pyannote stage. It needs one-time access to a gated Hugging Face model:
 
 1. Accept the terms at [pyannote/speaker-diarization-community-1](https://huggingface.co/pyannote/speaker-diarization-community-1).
-2. Create a [Hugging Face read token](https://huggingface.co/settings/tokens) with access to that model.
+2. Create a [Hugging Face token](https://huggingface.co/settings/tokens) under the **same account** that accepted the model terms. A token with the **Read** role is sufficient. For tighter scope, use a **fine-grained** token with read access to `pyannote/speaker-diarization-community-1`; ensure gated-model downloads are permitted. If using the broader gated-repository permission, enable **Read access to contents of all public gated repos you can access**.
 3. Set `HF_TOKEN=...` in your local `.env` and run `docker compose up -d`.
 4. Optionally cache it using `docker compose exec transcription python -m backend.warmup --model small --speakers`.
+
+Only model download/read access is needed: no write, repository administration, or Inference Providers/Endpoints permissions. The token does not bypass the model's access terms. Keep it only in the ignored server-side `.env`; recordings and inference stay on your NUC. See [Hugging Face's token permissions documentation](https://huggingface.co/docs/hub/en/security-tokens).
 
 The new-job screen enables speaker labeling by default when a token is configured. You can turn it off per job to save processing time. A configured token does not guarantee model access; if loading or diarization fails, the transcript is saved with a visible warning. Without a token, transcription and timestamps still work.
 
@@ -106,15 +108,13 @@ Closing the browser after uploading does not stop a queued job. Reopen its detai
 
 ## Output
 
-Each `.txt` contains source/model metadata, segment text with start/end timestamps and speaker labels, followed by word-level timestamps, confidence scores, and word speaker labels where available. Missing timings are marked `unknown`; values are not fabricated. This intentionally verbose format is suited to downstream LLM inputs.
+Each `.txt` contains source/model metadata and segment text with start/end timestamps and speaker labels where available. Word-level timestamps and confidence scores are omitted. Missing timings are marked `unknown`; values are not fabricated. This compact format is suited to downstream LLM inputs.
 
 ```text
 [00:00:03.240 --> 00:00:04.100] SPEAKER_00: Hello there.
-  [00:00:03.240 --> 00:00:03.570; SPEAKER_00; score=0.972] Hello
-  [00:00:03.600 --> 00:00:04.100; SPEAKER_00; score=0.941] there.
 ```
 
-The JSON companion preserves aligned results, original ASR segments, and speaker turns where available. ZIP entries have numeric prefixes so files with the same name do not overwrite each other. The preview is capped at 100,000 characters; downloads contain the full text.
+The JSON companion preserves the full aligned results (including word timings and confidence scores where available), original ASR segments, and speaker turns. ZIP entries have numeric prefixes so files with the same name do not overwrite each other. The preview is capped at 100,000 characters; downloads contain the full text. Previously generated TXT files keep their saved format.
 
 Transcripts are checkpointed after recognition and alignment. If a later stage fails, available text remains downloadable. Partial checkpoints explicitly say processing is incomplete. Alignment or speaker failures produce warnings rather than throwing away usable transcription.
 
